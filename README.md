@@ -197,7 +197,9 @@ GitHub Actions runs on every push and pull request to `main`.
 
 The pipeline validates that the application compiles and all tests pass before any manual deployment step.
 
-[PLACEHOLDER: Insert screenshot of a successful GitHub Actions CI workflow run showing restore, build, and test steps passing]
+<img src="https://github.com/user-attachments/assets/4f399a89-4bf7-47a1-a5bf-2ff8b9bf3fb7" alt="GitHub Actions CI/CD pipeline showing successful build-and-test and deploy steps" />
+
+*A successful CI/CD run with build-and-test and deploy stages completing in under a minute.*
 
 ---
 
@@ -221,11 +223,31 @@ annotations:
   prometheus.io/port: "8080"
 ```
 
-[PLACEHOLDER: Insert screenshot of Grafana dashboard showing HTTP request metrics and missions_created_total counter]
+<img src="https://github.com/user-attachments/assets/6072deef-252b-4eb4-a71a-35ed259e5f87" alt="Grafana dashboard showing HTTP request metrics and application monitoring data" />
+
+*Grafana dashboard visualizing metrics scraped by Prometheus from the application's `/metrics` endpoint.*
 
 ---
 
 ## Screenshots
+
+<details>
+<summary>CI/CD pipeline — build, test, and deploy</summary>
+
+<img src="https://github.com/user-attachments/assets/4f399a89-4bf7-47a1-a5bf-2ff8b9bf3fb7" alt="GitHub Actions CI/CD pipeline" />
+
+Shows a successful GitHub Actions workflow run with build-and-test and deploy stages completing on push to main.
+
+</details>
+
+<details>
+<summary>Observability — Grafana dashboard</summary>
+
+<img src="https://github.com/user-attachments/assets/6072deef-252b-4eb4-a71a-35ed259e5f87" alt="Grafana monitoring dashboard" />
+
+Shows the Grafana dashboard visualizing application metrics collected by Prometheus from the running workload inside the local Kubernetes cluster.
+
+</details>
 
 <details>
 <summary>Kubernetes cluster — all pods running</summary>
@@ -237,17 +259,22 @@ Shows the infrasprint-api deployment alongside the full monitoring stack (Promet
 </details>
 
 <details>
-<summary>Additional screenshot</summary>
+<summary>Application running — endpoint response</summary>
 
-<img src="https://github.com/user-attachments/assets/4029850e-53fc-4293-a02c-05c6ff785ab6" alt="Project screenshot" />
+<img src="https://github.com/user-attachments/assets/0130e113-2a95-4351-90d6-e0ea94da7b6b" alt="Application endpoint response" />
 
-*[PLACEHOLDER: Add a caption describing what this screenshot shows. Move this image to the matching section (CI Overview, Observability, or Deploy to Local Kubernetes) if it fits better there.]*
+Shows the application responding to requests, demonstrating the API running inside the local Kubernetes cluster.
 
 </details>
 
-[PLACEHOLDER: Insert screenshot of curl response to /health endpoint showing JSON status output]
+<details>
+<summary>Project overview</summary>
 
-[PLACEHOLDER: Insert screenshot of GitHub Actions CI pipeline with all steps passing]
+<img src="https://github.com/user-attachments/assets/4029850e-53fc-4293-a02c-05c6ff785ab6" alt="Project screenshot" />
+
+Additional project screenshot showing the infrastructure and deployment setup.
+
+</details>
 
 ---
 

@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="InfraSprint.Api/InfraSprint.Api.csproj" />
+  <Project Path="InfraSprint.Tests/InfraSprint.Tests.csproj" />
+</Solution>

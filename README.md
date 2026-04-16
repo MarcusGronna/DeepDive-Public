@@ -146,6 +146,24 @@ The following screenshots were captured from the working project environment (pr
 </details>
 
 <details>
+<summary>Observability — Updated Grafana dashboard</summary>
+
+<img src="https://github.com/user-attachments/assets/6cd56f48-2fa2-4de3-a379-d9f23e9b68c2" alt="Updated Grafana dashboard with expanded panels including deployment replicas, pod counts, latency, and request metrics" />
+
+*Updated Grafana dashboard with expanded panels covering available deployment replicas, node and pod counts, running pods by namespace, average latency by route, missions created total, requests by route, API running pods, and container restarts.*
+
+</details>
+
+<details>
+<summary>Observability — Grafana dashboard under external load</summary>
+
+<img src="https://github.com/user-attachments/assets/ecfc8580-a11b-4e26-8c64-d3391aeef41f" alt="Grafana dashboard showing metrics under additional load from an external script curling the API endpoints" />
+
+*Grafana dashboard capturing metrics while an external script was actively curling the API endpoints, generating additional load. This demonstrates how the monitoring stack visualizes increased traffic and latency patterns in real time.*
+
+</details>
+
+<details>
 <summary>Application running — endpoint response</summary>
 
 <img src="https://github.com/user-attachments/assets/0130e113-2a95-4351-90d6-e0ea94da7b6b" alt="Application endpoint response" />

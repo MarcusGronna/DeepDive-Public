@@ -197,7 +197,7 @@ GitHub Actions runs on every push and pull request to `main`.
 
 The pipeline validates that the application compiles and all tests pass before any manual deployment step.
 
-[PLACEHOLDER: Insert screenshot of GitHub Actions CI workflow run here]
+[PLACEHOLDER: Insert screenshot of a successful GitHub Actions CI workflow run showing restore, build, and test steps passing]
 
 ---
 
@@ -221,7 +221,7 @@ annotations:
   prometheus.io/port: "8080"
 ```
 
-[PLACEHOLDER: Insert screenshot of Grafana dashboard showing application metrics here]
+[PLACEHOLDER: Insert screenshot of Grafana dashboard showing HTTP request metrics and missions_created_total counter]
 
 ---
 
@@ -236,11 +236,9 @@ Shows the infrasprint-api deployment alongside the full monitoring stack (Promet
 
 </details>
 
-[PLACEHOLDER: Insert screenshot of application health endpoint response here]
+[PLACEHOLDER: Insert screenshot of curl response to /health endpoint showing JSON status output]
 
-[PLACEHOLDER: Insert screenshot of Grafana dashboard here]
-
-[PLACEHOLDER: Insert screenshot of GitHub Actions CI pipeline passing here]
+[PLACEHOLDER: Insert screenshot of GitHub Actions CI pipeline with all steps passing]
 
 ---
 

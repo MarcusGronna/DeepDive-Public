@@ -272,7 +272,7 @@ Shows the application responding to requests, demonstrating the API running insi
 
 <img src="https://github.com/user-attachments/assets/6072deef-252b-4eb4-a71a-35ed259e5f87" alt="Docker running in the terminal" />
 
-Shows Docker running in the terminal, demonstrating the containerized application.
+Shows in the terminal that Docker Desktop is running.
 
 </details>
 

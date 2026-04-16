@@ -236,6 +236,15 @@ Shows the infrasprint-api deployment alongside the full monitoring stack (Promet
 
 </details>
 
+<details>
+<summary>Additional screenshot</summary>
+
+<img src="https://github.com/user-attachments/assets/4029850e-53fc-4293-a02c-05c6ff785ab6" alt="Project screenshot" />
+
+*[PLACEHOLDER: Add a caption describing what this screenshot shows. Move this image to the matching section (CI Overview, Observability, or Deploy to Local Kubernetes) if it fits better there.]*
+
+</details>
+
 [PLACEHOLDER: Insert screenshot of curl response to /health endpoint showing JSON status output]
 
 [PLACEHOLDER: Insert screenshot of GitHub Actions CI pipeline with all steps passing]

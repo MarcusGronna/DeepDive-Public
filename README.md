@@ -223,9 +223,9 @@ annotations:
   prometheus.io/port: "8080"
 ```
 
-<img src="https://github.com/user-attachments/assets/6072deef-252b-4eb4-a71a-35ed259e5f87" alt="Grafana dashboard showing HTTP request metrics and application monitoring data" />
+<img src="https://github.com/user-attachments/assets/4029850e-53fc-4293-a02c-05c6ff785ab6" alt="Grafana dashboard showing metrics from the api-app" />
 
-*Grafana dashboard visualizing metrics scraped by Prometheus from the application's `/metrics` endpoint.*
+*Grafana dashboard showing metrics collected by Prometheus from the api-app.*
 
 ---
 
@@ -243,9 +243,9 @@ Shows a successful GitHub Actions workflow run with build-and-test and deploy st
 <details>
 <summary>Observability — Grafana dashboard</summary>
 
-<img src="https://github.com/user-attachments/assets/6072deef-252b-4eb4-a71a-35ed259e5f87" alt="Grafana monitoring dashboard" />
+<img src="https://github.com/user-attachments/assets/4029850e-53fc-4293-a02c-05c6ff785ab6" alt="Grafana dashboard showing metrics from the api-app" />
 
-Shows the Grafana dashboard visualizing application metrics collected by Prometheus from the running workload inside the local Kubernetes cluster.
+Shows the Grafana dashboard displaying metrics from the api-app, collected by Prometheus from the running workload inside the local Kubernetes cluster.
 
 </details>
 
@@ -268,11 +268,11 @@ Shows the application responding to requests, demonstrating the API running insi
 </details>
 
 <details>
-<summary>Project overview</summary>
+<summary>Docker running in the terminal</summary>
 
-<img src="https://github.com/user-attachments/assets/4029850e-53fc-4293-a02c-05c6ff785ab6" alt="Project screenshot" />
+<img src="https://github.com/user-attachments/assets/6072deef-252b-4eb4-a71a-35ed259e5f87" alt="Docker running in the terminal" />
 
-Additional project screenshot showing the infrastructure and deployment setup.
+Shows Docker running in the terminal, demonstrating the containerized application.
 
 </details>
 

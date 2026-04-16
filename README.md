@@ -1,121 +1,275 @@
-# DeepDiveInfra
+# DeepDive — Local Cloud-Native Delivery Lab
 
-A self-hosted, cloud-native style learning project focused on the delivery chain around a deliberately simple backend application.
+A self-hosted, cloud-native style portfolio project focused on the full delivery chain around a deliberately simple ASP.NET Core backend: **CI/CD, Docker, Kubernetes, and observability — all running locally.**
 
-The goal is not the app itself — it is understanding the full path from source code to a running workload:
-**code → test → build → Docker image → local Kubernetes → deployment and observability.**
+> The application is intentionally minimal. The real work is everything that surrounds it: automated testing, containerization, local cluster deployment, Prometheus metrics, and Grafana dashboards.
 
 ---
 
-## What this project is
+## Why This Project Exists
 
-This is a learning-focused infrastructure sprint. A small ASP.NET Core Web API serves as the deployable artifact, but the real work is in everything that surrounds it: CI/CD, containerization, Linux tooling, Kubernetes, and eventually observability.
+This project exists to demonstrate practical, hands-on understanding of how software moves from source code to a running, monitored workload — without relying on managed cloud services.
 
-This is **not** a managed cloud project. There is no Azure, no AWS, no Terraform. It is a local, self-hosted lab case designed to build practical understanding of how software gets from a repository to a running container in a cluster.
+It is a **local infrastructure lab**, not a production system. There is no Azure, no AWS, no Terraform. The entire stack — from CI to container to cluster to monitoring — runs on a local machine using open-source tooling. The goal is to make the delivery chain visible, debuggable, and fully reproducible.
 
-## Why the app is simple on purpose
+---
 
-The backend is intentionally minimal so that the focus stays on infrastructure and delivery, not business logic. The API manages a single domain entity (Mission) with three endpoints. That is enough to have something real to build, test, containerize, and deploy — without the app itself becoming the point.
+## What This Project Demonstrates
 
-## What has been built so far
+- Building and testing an application through **GitHub Actions CI**
+- Packaging the application as a **multi-stage Docker image**
+- Deploying to a **local Kubernetes cluster** using kind
+- Exposing **Prometheus metrics** from the application at runtime
+- Collecting and visualizing metrics with **Prometheus and Grafana**
+- Scripting the full **build → load → deploy** flow for local iteration
+- Structuring a project so that infrastructure and delivery concerns are first-class
 
-**Application:**
-- ASP.NET Core Web API (.NET 10) with minimal API style
-- SQLite database via Entity Framework Core
-- Automatic database migrations on startup
-- One domain entity: `Mission` (Id, Title, Region, ThreatLevel, CreatedAt)
-- Endpoints: `GET /health`, `GET /missions`, `POST /missions`
-- OpenAPI spec with Scalar API reference (development mode)
+---
 
-**Testing:**
-- xUnit integration test project
-- `WebApplicationFactory`-based test for `GET /health`
+## Tech Stack
 
-**CI/CD:**
-- GitHub Actions workflow (`ci.yml`) running on `ubuntu-latest`
-- Pipeline steps: checkout → .NET setup → restore → build → test
-- Triggers on push and pull request
+| Layer            | Technology                                      |
+|------------------|------------------------------------------------|
+| **Backend**      | ASP.NET Core (.NET 10), minimal API style       |
+| **Database**     | SQLite via Entity Framework Core                |
+| **Metrics**      | prometheus-net (HTTP metrics + custom counters)  |
+| **API Docs**     | OpenAPI + Scalar (development mode)             |
+| **Testing**      | xUnit, WebApplicationFactory                    |
+| **CI**           | GitHub Actions (`ci.yml`)                       |
+| **Container**    | Docker, multi-stage build                       |
+| **Orchestration**| Kubernetes (kind — local cluster)               |
+| **Monitoring**   | Prometheus + Grafana (deployed in-cluster)       |
 
-**Containerization:**
-- Multi-stage Dockerfile (SDK build → ASP.NET runtime)
-- App exposed on port 8080
-- `.dockerignore` configured to keep the image clean
+---
 
-**Local Kubernetes (planned/in progress):**
-- kind as the local cluster provider (runs Kubernetes nodes as Docker containers)
-- kubectl for cluster interaction
-- WSL Ubuntu as the Linux-oriented working environment
+## Architecture / Delivery Flow
 
-## How the environment is structured
+```
+Code → GitHub → GitHub Actions CI → Docker build → kind load → Kubernetes deployment → Prometheus scraping → Grafana dashboards
+```
 
-This project runs across several layers on a Windows host:
+**Step by step:**
 
-| Layer | Role |
-|---|---|
-| **Windows host** | Development machine — IDE, Git, browser |
-| **WSL (Ubuntu)** | Linux working environment for Docker, kubectl, kind, and shell-based tooling |
-| **Docker Desktop** | Container runtime, shared between Windows and WSL |
-| **kind** | Local Kubernetes cluster — runs cluster nodes as Docker containers inside Docker Desktop |
-| **kubectl** | CLI tool used from WSL to interact with the kind cluster |
+1. Code is pushed to GitHub
+2. GitHub Actions runs restore, build, and test automatically
+3. A Docker image is built locally from the published output
+4. The image is loaded into a local kind Kubernetes cluster
+5. Kubernetes runs the workload as a pod behind a ClusterIP Service
+6. Prometheus scrapes the `/metrics` endpoint exposed by the application
+7. Grafana visualizes the collected metrics
 
-kind uses Docker containers to simulate Kubernetes nodes. This means the full stack — from building an image to deploying it into a cluster — runs locally without any cloud accounts or remote infrastructure.
+---
 
-WSL provides the Linux environment where most infrastructure tooling lives. Docker Desktop bridges the container runtime between Windows and WSL so that both sides can work with the same Docker daemon.
+## Repository Structure
 
-## What this setup means conceptually
+```
+.
+├── .github/workflows/
+│   └── ci.yml                  # GitHub Actions CI pipeline
+├── InfraSprint.Api/
+│   ├── Program.cs              # Application entry point and endpoint definitions
+│   ├── Models/Mission.cs       # Domain entity
+│   ├── Data/AppDbContext.cs     # EF Core database context
+│   ├── Migrations/             # Auto-generated EF Core migrations
+│   └── InfraSprint.Api.csproj  # Project file with dependencies
+├── InfraSprint.Tests/
+│   ├── HealthEndpointTests.cs  # Integration test for /health
+│   └── InfraSprint.Tests.csproj
+├── k8s/
+│   └── app.yaml                # Kubernetes Deployment + Service manifest
+├── scripts/
+│   └── deploy-local.sh         # Build, load, and deploy script for kind
+├── Dockerfile                  # Multi-stage Docker build
+├── .dockerignore
+├── InfraSprint.slnx            # Solution file
+└── README.md
+```
 
-This is not "just an app." It is a delivery-chain project. The interesting part is the path a change takes:
+---
 
-1. Code is written and pushed to GitHub
-2. GitHub Actions restores, builds, and tests automatically
-3. A Docker image is built from the published output
-4. The image is loaded into a local Kubernetes cluster (kind)
-5. Kubernetes runs the workload as a pod
-6. (Planned) Prometheus scrapes metrics; Grafana visualizes them
+## How to Run Locally
 
-Each layer introduces its own concerns, failure modes, and configuration surface. Understanding what happens _between_ layers is the core learning objective.
+### Prerequisites
 
-## What I am learning through this
+- [.NET 10 SDK](https://dotnet.microsoft.com/download)
 
-- The difference between a development environment, a build/test environment, a container runtime, a deploy target, and a runtime environment
-- How containers work as deployable artifacts — not just a way to run things locally
-- How Kubernetes fits into the delivery flow and what it actually manages
-- How infrastructure problems often happen between layers (networking, volumes, permissions, configuration), not only inside application code
-- How CI/CD pipelines connect the development workflow to the deployment target
-- How GitHub Actions works, including the difference between GitHub-hosted and self-hosted runners
+### Run the API
 
-## Advantages and trade-offs
+```bash
+dotnet restore
+dotnet build
+dotnet run --project InfraSprint.Api
+```
 
-**Advantages:**
-- Realistic scope without cloud cost or account complexity
-- Strong learning value — every layer is visible and debuggable
-- Local, cheap, and fully repeatable
-- Practical Linux, Docker, and Kubernetes experience on a Windows machine
+The API starts on `http://localhost:8080` (or the configured port) with these endpoints:
 
-**Trade-offs and limitations:**
-- This is not production infrastructure — it is a learning lab
-- Extra complexity from the Windows + WSL + Docker Desktop + kind stack
-- kind is excellent for learning but does not replicate real cloud Kubernetes behavior (no load balancers, no cloud networking, no persistent volume providers)
-- SQLite is chosen for simplicity — it is not ideal for containerized or clustered workloads where a network-accessible database would be more appropriate
-- No TLS, authentication, or security hardening
+| Method | Path        | Description                          |
+|--------|-------------|--------------------------------------|
+| GET    | `/health`   | Health check                         |
+| GET    | `/missions` | List all missions (newest first)     |
+| POST   | `/missions` | Create a new mission                 |
+| GET    | `/metrics`  | Prometheus metrics endpoint          |
 
-## How to talk about this project
+### Run Tests
 
-> This is a self-hosted, local cloud-native style learning case. The focus is on the delivery chain — CI/CD, Docker, Kubernetes, Linux tooling, and observability — built around a deliberately simple ASP.NET Core backend. The environment runs on WSL and kind, not on managed cloud services. The goal is to understand how software moves from source code to a running workload in a cluster, and where things break between layers.
+```bash
+dotnet test
+```
 
-Use this framing in a portfolio or interview setting. Be clear that it is a learning project, not a production platform. The value is in the infrastructure understanding, not the application complexity.
+---
 
-## Current progress
+## Run with Docker
 
-- [x] ASP.NET Core Web API with SQLite and EF Core
-- [x] Domain model and startup migrations
-- [x] Health, GET, and POST endpoints
-- [x] xUnit integration test for `/health`
-- [x] GitHub Actions CI pipeline (restore → build → test)
-- [x] Multi-stage Dockerfile
-- [ ] Container image built and tested locally
-- [ ] kind cluster provisioned
-- [ ] Kubernetes manifests (Deployment, Service)
-- [ ] App deployed and reachable in the cluster
-- [ ] Prometheus and Grafana observability
-- [ ] Self-hosted runner integration
+### Build the image
+
+```bash
+docker build -t infrasprint-api:dev .
+```
+
+### Run the container
+
+```bash
+docker run -p 8080:8080 infrasprint-api:dev
+```
+
+The Dockerfile uses a multi-stage build: the .NET SDK compiles and publishes the application, and the final image runs on the lightweight ASP.NET runtime base.
+
+---
+
+## Deploy to Local Kubernetes
+
+### Prerequisites
+
+- [Docker](https://www.docker.com/)
+- [kind](https://kind.sigs.k8s.io/)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+
+### Create a kind cluster (one-time)
+
+```bash
+kind create cluster --name infrasprint
+```
+
+### Deploy the application
+
+The included script handles the full flow — build, load, apply, and restart:
+
+```bash
+./scripts/deploy-local.sh
+```
+
+This script:
+1. Builds the Docker image (`infrasprint-api:dev`)
+2. Loads it into the kind cluster
+3. Applies the Kubernetes manifest (`k8s/app.yaml`)
+4. Restarts the deployment to pick up the new image
+
+### Verify the deployment
+
+```bash
+kubectl get pods -A
+```
+
+<img src="https://github.com/user-attachments/assets/33339cf3-cdd8-4fd7-8fb6-9da4b90a9f9a" alt="kubectl get pods -A showing all running pods across namespaces, including infrasprint-api in default and Prometheus/Grafana in monitoring" />
+
+*All pods running in the local kind cluster — the `infrasprint-api` pod in the default namespace, core Kubernetes components in kube-system, and Prometheus + Grafana in the monitoring namespace.*
+
+### Access the application from within the cluster
+
+```bash
+kubectl port-forward svc/infrasprint-api 8080:8080
+curl http://localhost:8080/health
+```
+
+---
+
+## CI Overview
+
+GitHub Actions runs on every push and pull request to `main`.
+
+**Pipeline steps (`ci.yml`):**
+
+1. Checkout repository
+2. Setup .NET 10 SDK
+3. Restore dependencies
+4. Build in Release configuration
+5. Run tests
+
+The pipeline validates that the application compiles and all tests pass before any manual deployment step.
+
+[PLACEHOLDER: Insert screenshot of GitHub Actions CI workflow run here]
+
+---
+
+## Observability / Monitoring
+
+The application exposes Prometheus-compatible metrics at `/metrics` using the `prometheus-net.AspNetCore` library.
+
+**What is instrumented:**
+
+- **HTTP request metrics** — automatically collected via `UseHttpMetrics()` (request duration, status codes, methods)
+- **Custom counter** — `missions_created_total` increments every time a new mission is created via `POST /missions`
+
+**In-cluster monitoring stack:**
+
+The local Kubernetes cluster runs Prometheus and Grafana in the `monitoring` namespace. Prometheus is configured to scrape the application's `/metrics` endpoint via service annotations:
+
+```yaml
+annotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/path: "/metrics"
+  prometheus.io/port: "8080"
+```
+
+[PLACEHOLDER: Insert screenshot of Grafana dashboard showing application metrics here]
+
+---
+
+## Screenshots
+
+<details>
+<summary>Kubernetes cluster — all pods running</summary>
+
+<img src="https://github.com/user-attachments/assets/33339cf3-cdd8-4fd7-8fb6-9da4b90a9f9a" alt="kubectl get pods -A" />
+
+Shows the infrasprint-api deployment alongside the full monitoring stack (Prometheus server, Grafana, alertmanager, kube-state-metrics, node-exporter, pushgateway).
+
+</details>
+
+[PLACEHOLDER: Insert screenshot of application health endpoint response here]
+
+[PLACEHOLDER: Insert screenshot of Grafana dashboard here]
+
+[PLACEHOLDER: Insert screenshot of GitHub Actions CI pipeline passing here]
+
+---
+
+## Key Learning Outcomes
+
+- **Delivery chain thinking** — understanding each stage from source to running workload and where failures happen between layers
+- **Containerization** — building production-style multi-stage Docker images, not just running apps in containers
+- **Kubernetes fundamentals** — Deployments, Services, pod lifecycle, image loading with kind, and rolling updates
+- **CI/CD** — structuring a GitHub Actions pipeline that gates builds and tests on every change
+- **Observability** — instrumenting an application with Prometheus metrics and building a monitoring stack inside a local cluster
+- **Linux tooling** — working with Docker, kubectl, and shell scripting in a WSL-based environment
+
+---
+
+## Limitations
+
+- **Not a production system** — this is a local learning lab with no TLS, authentication, or security hardening
+- **SQLite** is used for simplicity; it is not suitable for clustered or multi-replica workloads
+- **kind** does not replicate real cloud Kubernetes behavior (no load balancers, no cloud networking, no managed persistent volumes)
+- **No automated image push** — the CI pipeline builds and tests the application, but the Docker image is built and loaded into kind locally
+- **Single replica** — the deployment runs one pod; scaling and high availability are not addressed
+
+---
+
+## Next Improvements
+
+- Add Docker image build step to the CI pipeline
+- Introduce Helm charts or Kustomize for manifest management
+- Add structured logging and log aggregation
+- Expand test coverage beyond the health endpoint
+- Explore network policies and resource limits in Kubernetes
+- Investigate self-hosted GitHub Actions runners for local CI/CD loops
